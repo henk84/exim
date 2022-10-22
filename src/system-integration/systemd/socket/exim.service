@@ -1,0 +1,16 @@
+[Unit]
+Description=Exim MTA (socket activated)
+Documentation=man:exim
+Documentation=https://exim.org/docs.html
+
+[Service]
+Environment=INACTIVITY_TIMEOUT=5m
+ExecStart=exim -bw${INACTIVITY_TIMEOUT}
+StandardInput=socket
+StandardError=journal
+
+ProtectSystem=strict
+ReadWriteDirectories=/var/spool/exim
+ReadWriteDirectories=/var/log/exim
+
+Slice=exim.slice

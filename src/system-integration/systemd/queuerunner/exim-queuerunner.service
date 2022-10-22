@@ -1,0 +1,13 @@
+[Unit]
+Description=Exim MTA (queue runner service)
+Documentation=man:exim
+Documentation=https://exim.org/docs.html
+
+[Service]
+ExecStart=exim -q
+
+ProtectSystem=strict
+ReadWriteDirectories=/var/spool/exim
+ReadWriteDirectories=/var/log/exim
+
+Slice=exim.slice

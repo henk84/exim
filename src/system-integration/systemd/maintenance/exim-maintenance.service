@@ -1,0 +1,24 @@
+[Unit]
+Description=Exim MTA (maintenance)
+Documentation=man:exim
+Documentation=https://exim.org/docs.html
+
+[Service]
+Type=oneshot
+ExecReload=kill -HUP ${MAINPID}
+
+ExecStart=sh -ec 'cd "`exim -n -bP spool_directory`" \
+	&& for db in db/retry db/misc db/wait-* db/callout db/tls; \
+		do \
+			[ "$${db##*.}" = lockfile ] && continue; \
+			test -f "$$db" || continue; \
+			exim_tidydb $PWD "$${db##*/}"; \
+		done'
+
+ProtectSystem=strict
+ReadWriteDirectories=/var/spool/exim
+
+Slice=exim.slice
+
+[Install]
+WantedBy=multi-user.target

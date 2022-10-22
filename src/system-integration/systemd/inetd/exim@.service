@@ -1,0 +1,20 @@
+[Unit]
+Description=Exim MTA (socket activated)
+Documentation=man:exim
+Documentation=https://exim.org/docs.html
+
+[Service]
+Type=exec
+ExecStart=exim -bs
+
+StandardInput=socket
+StandardError=journal
+
+# Don't kill the delivery process we spawned as a child
+KillMode=process
+
+ProtectSystem=strict
+ReadWriteDirectories=/var/spool/exim
+ReadWriteDirectories=/var/log/exim
+
+Slice=exim.slice
